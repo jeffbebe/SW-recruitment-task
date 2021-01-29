@@ -1,6 +1,8 @@
 FROM node:14
 WORKDIR /app
-COPY package.json package-lock.json src ./
+# COPY package.json package-lock.json src ./
+COPY . /app
 RUN npm install 
-CMD npm start
+EXPOSE 3000
+CMD [ "npm", "start" ]
 

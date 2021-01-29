@@ -19,7 +19,7 @@ export class UserModel {
   id: string;
 
   @Column()
-  username: string;
+  email: string;
 
   @Column()
   password: string;

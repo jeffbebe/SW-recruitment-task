@@ -6,18 +6,13 @@ import swaggerUi from "swagger-ui-express";
 import { loadEnvs } from "../config/env";
 import * as db from "../config/database";
 
-declare global {
-  var connection: any;
-}
-
 loadEnvs();
 (async () => {
   const app = express();
   const swaggerDocument = require("./swagger.json");
 
-  const dbConnection = await createConnection(db as ConnectionOptions);
-  dbConnection.runMigrations();
-  connection = dbConnection;
+  global.dbConnection = await createConnection(db as ConnectionOptions);
+  await global.dbConnection.runMigrations();
   app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   // parse application/json
@@ -26,5 +21,5 @@ loadEnvs();
   // parse application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({ extended: true }));
 
-  app.listen(process.env.PORT);
+  app.listen(3000);
 })();

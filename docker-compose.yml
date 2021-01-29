@@ -1,7 +1,6 @@
 version: "3.1"
 
 services:
-  # name of service is used as an address in docker network
   postgres:
     image: postgres
     environment:
@@ -21,15 +20,24 @@ services:
     ports:
       - 8080:8080
 
-  # web:
-  #   build: .
-  #   command: npm start
-  #   volumes:
-  #     - ./src:/app/src/
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - postgres
+  webapp:
+    networks:
+      - app
+    command: npm run watch
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+    environment:
+      ENV_NAME: dev
+    ports:
+      - 3000:3000
+    depends_on:
+      - postgres
 
 networks:
   app:
+
+volumes:
+  build:
