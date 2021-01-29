@@ -1,0 +1,35 @@
+version: "3.1"
+
+services:
+  # name of service is used as an address in docker network
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USERNAME: postgres
+      POSTGRES_DB: app
+    networks:
+      - app
+    ports:
+      - "5432:5432"
+
+  adminer:
+    image: adminer
+    restart: always
+    networks:
+      - app
+    ports:
+      - 8080:8080
+
+  # web:
+  #   build: .
+  #   command: npm start
+  #   volumes:
+  #     - ./src:/app/src/
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - postgres
+
+networks:
+  app:
