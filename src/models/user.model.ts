@@ -23,4 +23,7 @@ export class UserModel {
 
   @Column()
   password: string;
+
+  @Column()
+  temp: string;
 }

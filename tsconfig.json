@@ -5,13 +5,12 @@
     "module": "commonjs",
     "declaration": false,
     "strict": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "sourceMap": false,
     "inlineSourceMap": true,
-    "esModuleInterop": true,
     "outDir": "build",
     "typeRoots": ["./node_modules/@types", "./shared/typings"],
     "resolveJsonModule": true,
@@ -20,6 +19,6 @@
       "*": ["typings/*"]
     }
   },
-  "include": ["src/**/*.ts", "config/**/*.ts", "typings/*"],
+  "include": ["src/**/*.ts", "config/**/*.ts", "tests/**/*.ts", "typings/*"],
   "exclude": ["node_modules", "build/**"]
 }

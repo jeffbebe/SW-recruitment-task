@@ -1,19 +1,24 @@
-import express from "express";
-import bodyParser from "body-parser";
+import * as express from "express";
+import * as bodyParser from "body-parser";
 import { ConnectionOptions, createConnection } from "typeorm";
 import "reflect-metadata";
-import swaggerUi from "swagger-ui-express";
+import * as swaggerUi from "swagger-ui-express";
 import { loadEnvs } from "../config/env";
 import * as db from "../config/database";
+import { UserModel } from "./models/User.model";
 
 loadEnvs();
 (async () => {
   const app = express();
-  const swaggerDocument = require("./swagger.json");
+  //const swaggerDocument = require("./swagger.json");
 
-  global.dbConnection = await createConnection(db as ConnectionOptions);
-  await global.dbConnection.runMigrations();
-  app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  try {
+    global.dbConnection = await createConnection(db as ConnectionOptions);
+    await global.dbConnection.runMigrations();
+  } catch (error) {
+    console.log(error);
+  }
+  //app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   // parse application/json
   app.use(express.json());

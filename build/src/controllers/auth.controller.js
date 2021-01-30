@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const user_model_1 = require("../models/user.model");
+const User_model_1 = require("../models/User.model");
 exports.postLogin = async (req, res, next) => {
-    const userRepository = global.dbConnection.getRepository(user_model_1.UserModel);
+    const userRepository = global.dbConnection.getRepository(User_model_1.UserModel);
     const email = req.body.email;
     const password = req.body.password;
     try {
@@ -16,7 +16,7 @@ exports.postLogin = async (req, res, next) => {
     }
 };
 exports.postSignup = async (req, res, next) => {
-    const userRepository = global.dbConnection.getRepository(user_model_1.UserModel);
+    const userRepository = global.dbConnection.getRepository(User_model_1.UserModel);
     const email = req.body.email;
     const password = req.body.password;
     const confirmPassword = req.body.confirmPassword;

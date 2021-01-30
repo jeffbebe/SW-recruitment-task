@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { UserModel } from "../models/user.model";
+import { UserModel } from "../models/User.model";
 
 exports.postLogin = async (req: Request, res: Response, next: NextFunction) => {
   const userRepository = global.dbConnection.getRepository(UserModel);
