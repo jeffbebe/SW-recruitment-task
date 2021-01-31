@@ -3,6 +3,9 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 interface UserModelProps {
   email: string;
   password: string;
+  salt: string;
+  heroID: number;
+  heroName: string;
 }
 
 @Entity({
@@ -22,8 +25,14 @@ export class UserModel {
   email: string;
 
   @Column()
+  heroID: number;
+
+  @Column()
+  heroName: string;
+
+  @Column()
   password: string;
 
   @Column()
-  temp: string;
+  salt: string;
 }

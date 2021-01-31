@@ -6,10 +6,14 @@ import * as swaggerUi from "swagger-ui-express";
 import { loadEnvs } from "../config/env";
 import * as db from "../config/database";
 import { UserModel } from "./models/User.model";
+import { authRouter } from "./routes/auth.router";
 
 loadEnvs();
 (async () => {
   const app = express();
+  // parse application/x-www-form-urlencoded
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.json());
   //const swaggerDocument = require("./swagger.json");
 
   try {
@@ -18,13 +22,11 @@ loadEnvs();
   } catch (error) {
     console.log(error);
   }
-  //app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+  //app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use(authRouter);
   // parse application/json
   app.use(express.json());
 
-  // parse application/x-www-form-urlencoded
-  app.use(bodyParser.urlencoded({ extended: true }));
-
-  app.listen(3000);
+  app.listen(1337);
 })();
