@@ -7,6 +7,7 @@ import { loadEnvs } from "../config/env";
 import * as db from "../config/database";
 import { UserModel } from "./models/User.model";
 import { authRouter } from "./routes/auth.router";
+import { resourcesRouter } from "./routes/resources.router";
 
 loadEnvs();
 (async () => {
@@ -25,6 +26,7 @@ loadEnvs();
 
   //app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.use(authRouter);
+  app.use(resourcesRouter);
   // parse application/json
   app.use(express.json());
 

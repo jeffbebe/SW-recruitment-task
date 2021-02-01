@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { UserModel } from "../models/User.model";
 import * as jwt from "jsonwebtoken";
-import * as crypto from "crypto";
 const axios = require("axios").default;
 
 const getHero = async (id: number) => {
@@ -16,40 +15,28 @@ const getHero = async (id: number) => {
   }
 };
 
-export const postLogin = async (
+export const getResources = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const userRepository = global.dbConnection.getRepository(UserModel);
 
-  const { email, password } = req.body;
+  const { resources } = req.params;
 
   try {
-    const user = await userRepository.findOne({ email });
+    const user = await userRepository.findOne({ id: res.locals.userID });
     if (!user) {
       throw new Error("There is no such user");
     }
-    const hashedPassword = crypto
-      .pbkdf2Sync(password, user.salt, 1000, 64, `sha512`)
-      .toString(`hex`);
 
-    if (hashedPassword != user.password) {
-      throw new Error("Wrong password");
-    }
-
-    const token = jwt.sign(
-      { userID: user.id },
-      process.env.TOKENSECRET as string,
-      { expiresIn: 60 * 60 }
-    );
-    res.status(200).send(token);
+    res.status(200).send(resources); //send resource
   } catch (err) {
     next(err);
   }
 };
 
-export const postSignup = async (
+export const getSingleResource = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -60,7 +47,7 @@ export const postSignup = async (
   let salt: string, hashedPassword: string;
 
   try {
-    const user = await userRepository.findOne({ email });
+    /*  const user = await userRepository.findOne({ email });
 
     if (user) {
       throw new Error("User already exists");
@@ -68,16 +55,6 @@ export const postSignup = async (
     if (password !== confirmPassword) {
       throw new Error("Passwords do not match");
     }
-    // generate random 16 bytes long salt
-    salt = crypto.randomBytes(16).toString("hex");
-
-    hashedPassword = crypto
-      .pbkdf2Sync(password, salt, 1000, 64, `sha512`)
-      .toString(`hex`);
-
-    const heroID: number = Math.floor(Math.random() * (10 - 1) + 1);
-    const heroName: string = await getHero(heroID);
-
     const newUser = UserModel.create({
       email,
       password: hashedPassword,
@@ -85,7 +62,7 @@ export const postSignup = async (
       heroID,
       heroName,
     });
-    await userRepository.save(newUser);
+    await userRepository.save(newUser); */
     res.status(200).send(JSON.stringify("user created"));
   } catch (err) {
     next(err);

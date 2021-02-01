@@ -3,7 +3,6 @@ import * as path from "path";
 import { UserModel } from "../src/models/User.model";
 loadEnvs();
 
-console.log(process.env.POSTGRES_URL);
 const createDbConfigFromEnvs = (env: any) => ({
   type: "postgres",
   url: env.POSTGRES_URL,
