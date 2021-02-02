@@ -3,18 +3,7 @@ import { UserModel } from "../models/User.model";
 import * as jwt from "jsonwebtoken";
 import * as crypto from "crypto";
 const axios = require("axios").default;
-
-const getHero = async (id: number) => {
-  try {
-    const response = await axios.get(
-      "https://swapi.dev/api/people/" + id.toString()
-    );
-    return response.data.name;
-  } catch (err) {
-    // Handle Error Here
-    console.error(err);
-  }
-};
+import { requestResourceSWAPI } from "../middleware/sw-request.middleware";
 
 export const postLogin = async (
   req: Request,
@@ -43,7 +32,7 @@ export const postLogin = async (
       process.env.TOKENSECRET as string,
       { expiresIn: 60 * 60 }
     );
-    res.status(200).send(token);
+    res.status(200).json({ accessToken: token });
   } catch (err) {
     next(err);
   }
@@ -55,7 +44,7 @@ export const postSignup = async (
   next: NextFunction
 ) => {
   const userRepository = global.dbConnection.getRepository(UserModel);
-  console.log(req.body);
+
   const { email, password, confirmPassword } = req.body;
   let salt: string, hashedPassword: string;
 
@@ -74,9 +63,11 @@ export const postSignup = async (
     hashedPassword = crypto
       .pbkdf2Sync(password, salt, 1000, 64, `sha512`)
       .toString(`hex`);
-
-    const heroID: number = Math.floor(Math.random() * (10 - 1) + 1);
-    const heroName: string = await getHero(heroID);
+    const peopleObj = await requestResourceSWAPI("people");
+    const heroAmount = parseInt(peopleObj.count);
+    const heroID: number = Math.floor(Math.random() * (heroAmount - 1) + 1);
+    const response = await requestResourceSWAPI("people", heroID.toString());
+    const heroName = response.name;
 
     const newUser = UserModel.create({
       email,
@@ -86,7 +77,7 @@ export const postSignup = async (
       heroName,
     });
     await userRepository.save(newUser);
-    res.status(200).send(JSON.stringify("user created"));
+    res.status(200).send();
   } catch (err) {
     next(err);
   }

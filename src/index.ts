@@ -8,7 +8,7 @@ import * as db from "../config/database";
 import { UserModel } from "./models/User.model";
 import { authRouter } from "./routes/auth.router";
 import { resourcesRouter } from "./routes/resources.router";
-
+import * as redis from "redis";
 loadEnvs();
 (async () => {
   const app = express();
@@ -30,5 +30,5 @@ loadEnvs();
   // parse application/json
   app.use(express.json());
 
-  app.listen(1337);
+  app.listen(process.env.PORT);
 })();
