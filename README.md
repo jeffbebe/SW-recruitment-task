@@ -16,13 +16,11 @@ Please perform the following steps in exact sequence:
 
    Remember to fill up required values in `.env`
 
-2. Run `docker-compose build builder`
+2. Run - `docker-compose build builder`
 
-3. Run `npm run swagger-autogen`
+3. Run - `npm run start`
 
-4. Run watch - `npm run start`
-
-5. Visit- `localhost:1337/doc` for endpoint documentation
+4. Visit - `localhost:1337/doc` for endpoint documentation
 
 ### Dev setup
 
@@ -38,6 +36,12 @@ This app is fully dockerized, so in order to use it you have to have docker and 
 
    ```
    npm run watch
+   ```
+
+3. In order to update swagger documentation:
+
+   ```
+   npm run swagger-autogen
    ```
 
 ### Database migrations
