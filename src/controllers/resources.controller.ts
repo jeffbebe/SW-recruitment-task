@@ -50,12 +50,9 @@ export const getSingleResource = async (
       throw new WrongCredentialsError("User does not exist");
     }
     const hero = await requestResourceSWAPI("people", user.heroID);
-    console.log(hero);
     for (let resource of hero[resources]) {
       if (resource.search("/" + id + "/") != -1) {
         data = await requestUrlSwapi(resource);
-        console.log("data from resource controller");
-        console.log(data);
       } else
         throw new ForbiddenError("User does not have access to that resource");
     }

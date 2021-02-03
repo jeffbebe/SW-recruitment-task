@@ -25,8 +25,6 @@ export const isAuth = async (
       process.env.TOKENSECRET as string
     ) as TokenPayload;
     res.locals.userID = decoded.userID;
-    console.log("decoded");
-    console.log(decoded);
     next();
   } catch (err) {
     next(new UnauthorizedError("Wrong token"));
