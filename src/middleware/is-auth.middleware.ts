@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
+import { UnauthorizedError } from "../errors/unauthorized.error";
 
 export interface TokenPayload {
   userID: string;
@@ -13,11 +14,9 @@ export const isAuth = async (
   next: NextFunction
 ) => {
   try {
-    const { token } = req.body;
     const authorizationHeader = req.headers.authorization;
     if (!authorizationHeader) {
-      res.status(400).send();
-      throw new Error("No token");
+      throw new UnauthorizedError("Token field empty");
     }
     const [, userAccessToken] = String(authorizationHeader).split(" ");
 
@@ -25,10 +24,11 @@ export const isAuth = async (
       userAccessToken,
       process.env.TOKENSECRET as string
     ) as TokenPayload;
-
     res.locals.userID = decoded.userID;
+    console.log("decoded");
+    console.log(decoded);
     next();
   } catch (err) {
-    res.status(401).send();
+    next(new UnauthorizedError("Wrong token"));
   }
 };

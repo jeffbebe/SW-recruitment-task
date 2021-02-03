@@ -4,6 +4,7 @@ import * as jwt from "jsonwebtoken";
 import * as crypto from "crypto";
 const axios = require("axios").default;
 import { requestResourceSWAPI } from "../middleware/sw-request.middleware";
+import { WrongCredentialsError } from "../errors/wrongCredentials.error";
 
 export const postLogin = async (
   req: Request,
@@ -17,14 +18,14 @@ export const postLogin = async (
   try {
     const user = await userRepository.findOne({ email });
     if (!user) {
-      throw new Error("There is no such user");
+      throw new WrongCredentialsError("There is no such user");
     }
     const hashedPassword = crypto
       .pbkdf2Sync(password, user.salt, 1000, 64, `sha512`)
       .toString(`hex`);
 
     if (hashedPassword != user.password) {
-      throw new Error("Wrong password");
+      throw new WrongCredentialsError("Wrong password");
     }
 
     const token = jwt.sign(
@@ -52,10 +53,10 @@ export const postSignup = async (
     const user = await userRepository.findOne({ email });
 
     if (user) {
-      throw new Error("User already exists");
+      throw new WrongCredentialsError("User already exists");
     }
     if (password !== confirmPassword) {
-      throw new Error("Passwords do not match");
+      throw new WrongCredentialsError("Passwords do not match");
     }
     // generate random 16 bytes long salt
     salt = crypto.randomBytes(16).toString("hex");
@@ -63,8 +64,6 @@ export const postSignup = async (
       .pbkdf2Sync(password, salt, 1000, 64, `sha512`)
       .toString(`hex`);
     const peopleObj = await requestResourceSWAPI("people");
-    console.log(peopleObj);
-    console.log(peopleObj.count);
     const heroAmount = parseInt(peopleObj.count);
     const heroID: number = Math.floor(Math.random() * (heroAmount - 1) + 1);
     const response = await requestResourceSWAPI("people", heroID);

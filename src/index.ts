@@ -3,14 +3,14 @@ import * as bodyParser from "body-parser";
 import { ConnectionOptions, createConnection } from "typeorm";
 import "reflect-metadata";
 import * as swaggerUi from "swagger-ui-express";
+//import * as swagger from "swagger-express-ts";
 import { loadEnvs } from "../config/env";
 import * as dbConfig from "../config/database";
-// import { CacheClient } from "./util/redis";
 import * as AsyncRedis from "async-redis";
 import { UserModel } from "./models/User.model";
 import { authRouter } from "./routes/auth.router";
 import { resourcesRouter } from "./routes/resources.router";
-
+import { errorHandler } from "./middleware/error-handler.middleware";
 loadEnvs();
 
 (async () => {
@@ -18,7 +18,6 @@ loadEnvs();
   // parse application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(express.json());
-  //const swaggerDocument = require("./swagger.json");
 
   try {
     global.cacheClient = AsyncRedis.createClient({
@@ -30,9 +29,11 @@ loadEnvs();
     console.log(error);
   }
 
-  //app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  const swaggerDocument = require("../swagger.json");
+  app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.use(authRouter);
   app.use(resourcesRouter);
+  app.use(errorHandler);
   // parse application/json
   app.use(express.json());
 

@@ -5,6 +5,8 @@ import {
   requestResourceSWAPI,
   requestUrlSwapi,
 } from "../middleware/sw-request.middleware";
+import { WrongCredentialsError } from "../errors/wrongCredentials.error";
+import { ForbiddenError } from "../errors/forbidden.error";
 
 export const getResources = async (
   req: Request,
@@ -18,7 +20,7 @@ export const getResources = async (
   try {
     const user = await userRepository.findOne({ id: res.locals.userID });
     if (!user) {
-      throw new Error("There is no such user");
+      throw new WrongCredentialsError("There is no such user");
     }
     const heroData = await requestResourceSWAPI("people", user.heroID);
 
@@ -45,7 +47,7 @@ export const getSingleResource = async (
     const user = await userRepository.findOne({ id: res.locals.userID });
 
     if (!user) {
-      throw new Error("User does not exist");
+      throw new WrongCredentialsError("User does not exist");
     }
     const hero = await requestResourceSWAPI("people", user.heroID);
     console.log(hero);
@@ -54,7 +56,8 @@ export const getSingleResource = async (
         data = await requestUrlSwapi(resource);
         console.log("data from resource controller");
         console.log(data);
-      } else throw new Error("User does not have access to that resource");
+      } else
+        throw new ForbiddenError("User does not have access to that resource");
     }
     res.status(200).json(data);
   } catch (err) {

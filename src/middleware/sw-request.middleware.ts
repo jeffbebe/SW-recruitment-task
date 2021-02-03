@@ -1,6 +1,5 @@
 const axios = require("axios").default;
 import { getCache, putCache } from "./cache.middleware";
-import * as util from "util";
 
 export const requestResourceSWAPI = async (resource: string, id?: number) => {
   try {
