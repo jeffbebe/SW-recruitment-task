@@ -7,8 +7,7 @@ export const requestResourceSWAPI = async (resource: string, id?: number) => {
     const requestURL =
       process.env.SWAPI_URL + resource + (id ? "/" + id.toString() : "");
     let cache = await getCache(requestURL);
-
-    if (cache.length === 0) {
+    if (cache === null) {
       const response = await axios.get(requestURL);
       await putCache(requestURL, JSON.stringify(response.data));
       return response.data;
@@ -23,7 +22,7 @@ export const requestUrlSwapi = async (requestURL: string) => {
   try {
     const cache = await getCache(requestURL);
 
-    if (cache.length === 0) {
+    if (cache === null) {
       const response = await axios.get(requestURL);
       await putCache(requestURL, JSON.stringify(response.data));
       return response.data;

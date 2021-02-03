@@ -63,6 +63,8 @@ export const postSignup = async (
       .pbkdf2Sync(password, salt, 1000, 64, `sha512`)
       .toString(`hex`);
     const peopleObj = await requestResourceSWAPI("people");
+    console.log(peopleObj);
+    console.log(peopleObj.count);
     const heroAmount = parseInt(peopleObj.count);
     const heroID: number = Math.floor(Math.random() * (heroAmount - 1) + 1);
     const response = await requestResourceSWAPI("people", heroID);
