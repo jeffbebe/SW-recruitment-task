@@ -10,7 +10,6 @@ import { authRouter } from "./routes/auth.router";
 import { resourcesRouter } from "./routes/resources.router";
 import { errorHandler } from "./middleware/error-handler.middleware";
 loadEnvs();
-
 (async () => {
   const app = express();
   // parse application/x-www-form-urlencoded

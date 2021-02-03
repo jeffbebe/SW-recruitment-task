@@ -3,5 +3,5 @@ export const getCache = async (key: string) => {
 };
 
 export const putCache = async (key: string, value: string) => {
-  await global.cacheClient.set(key, value);
+  await global.cacheClient.set(key, value, { EX: 60 * 60 * 24 });
 };

@@ -4,7 +4,6 @@
   "description": "Recruitment task",
   "main": "./build/index.js",
   "scripts": {
-    "postinstall": "node build/src/swagger.js",
     "watch": "docker-compose up builder",
     "watchNodemon": "nodemon ./build/src/index.js",
     "start": "docker-compose up webapp",
