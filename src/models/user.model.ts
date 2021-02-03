@@ -25,7 +25,7 @@ export class UserModel {
   email: string;
 
   @Column()
-  heroID: string;
+  heroID: number;
 
   @Column()
   heroName: string;

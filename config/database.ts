@@ -17,5 +17,4 @@ const createDbConfigFromEnvs = (env: any) => ({
 });
 
 const config = createDbConfigFromEnvs(process.env);
-console.log();
 export = config;

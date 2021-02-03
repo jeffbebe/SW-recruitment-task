@@ -1,20 +1,35 @@
 const axios = require("axios").default;
+import { getCache, putCache } from "./cache.middleware";
+import * as util from "util";
 
-export const requestResourceSWAPI = async (resource: string, id?: string) => {
+export const requestResourceSWAPI = async (resource: string, id?: number) => {
   try {
-    const requestURL = process.env.SWAPI_URL + resource + (id ? "/" + id : "");
-    const response = await axios.get(requestURL);
-    return response.data;
+    const requestURL =
+      process.env.SWAPI_URL + resource + (id ? "/" + id.toString() : "");
+    let cache = await getCache(requestURL);
+
+    if (cache.length === 0) {
+      const response = await axios.get(requestURL);
+      await putCache(requestURL, JSON.stringify(response.data));
+      return response.data;
+    }
+    return JSON.parse(cache);
   } catch (err) {
-    return new Error("Could not get a response");
+    return new Error(err);
   }
 };
 
 export const requestUrlSwapi = async (requestURL: string) => {
   try {
-    const response = await axios.get(requestURL);
-    return response.data;
+    const cache = await getCache(requestURL);
+
+    if (cache.length === 0) {
+      const response = await axios.get(requestURL);
+      await putCache(requestURL, JSON.stringify(response.data));
+      return response.data;
+    }
+    return JSON.parse(cache);
   } catch (err) {
-    return new Error("Could not get a response");
+    return new Error(err);
   }
 };

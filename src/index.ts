@@ -4,12 +4,15 @@ import { ConnectionOptions, createConnection } from "typeorm";
 import "reflect-metadata";
 import * as swaggerUi from "swagger-ui-express";
 import { loadEnvs } from "../config/env";
-import * as db from "../config/database";
+import * as dbConfig from "../config/database";
+// import { CacheClient } from "./util/redis";
+import * as AsyncRedis from "async-redis";
 import { UserModel } from "./models/User.model";
 import { authRouter } from "./routes/auth.router";
 import { resourcesRouter } from "./routes/resources.router";
-import * as redis from "redis";
+
 loadEnvs();
+
 (async () => {
   const app = express();
   // parse application/x-www-form-urlencoded
@@ -18,7 +21,10 @@ loadEnvs();
   //const swaggerDocument = require("./swagger.json");
 
   try {
-    global.dbConnection = await createConnection(db as ConnectionOptions);
+    global.cacheClient = AsyncRedis.createClient({
+      url: process.env.REDIS_URL,
+    });
+    global.dbConnection = await createConnection(dbConfig as ConnectionOptions);
     await global.dbConnection.runMigrations();
   } catch (error) {
     console.log(error);

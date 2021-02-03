@@ -59,14 +59,13 @@ export const postSignup = async (
     }
     // generate random 16 bytes long salt
     salt = crypto.randomBytes(16).toString("hex");
-
     hashedPassword = crypto
       .pbkdf2Sync(password, salt, 1000, 64, `sha512`)
       .toString(`hex`);
     const peopleObj = await requestResourceSWAPI("people");
     const heroAmount = parseInt(peopleObj.count);
     const heroID: number = Math.floor(Math.random() * (heroAmount - 1) + 1);
-    const response = await requestResourceSWAPI("people", heroID.toString());
+    const response = await requestResourceSWAPI("people", heroID);
     const heroName = response.name;
 
     const newUser = UserModel.create({
